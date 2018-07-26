@@ -1,6 +1,7 @@
 const path = require('path')
 
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const src = path.resolve(__dirname, 'src')
 const dist = path.resolve(__dirname, 'dist')
@@ -8,20 +9,20 @@ const dist = path.resolve(__dirname, 'dist')
 module.exports = {
 	mode: 'development',
 
-	devServer: {
-		contentBase: 'dist',
-		port: 3000,
-		open: true
-	},
-
 	entry: [
-		'./src/assets/scripts/main.js',
-		'./src/assets/scss/style.scss'
+		src + '/assets/scripts/main.js',
+		src + '/assets/scss/style.scss'
 	],
 
 	output: {
 		filename: 'bundle.js',
 		path: dist
+	},
+
+	devServer: {
+		contentBase: dist,
+		port: 3000,
+		open: true
 	},
 
 	module: {
@@ -43,24 +44,11 @@ module.exports = {
 			{
 				test: /\.scss$/,
 				exclude: /node_modules/,
-				use: [
-					'style-loader',
-					{
-						loader: 'css-loader',
-						options: {
-							url: false,
-							sourceMap: true,
-							importLoaders: 2
-						},
-					},
-					{
-						loader: 'sass-loader',
-						options: {
-							sourceMap: true,
-						}
-					}
-				]
-			}
+				use: ExtractTextPlugin.extract({
+					fallback: 'style-loader',
+					use: [{loader: 'css-loader', options: {url: false}}, 'sass-loader'],
+				})
+			},
 		]
 	},
 
@@ -69,6 +57,10 @@ module.exports = {
 			from: src,
 			to: dist,
 			ignore: [ '*.js', '*.scss' ]
-		}])
+		}]),
+		new ExtractTextPlugin({
+			filename: '/assets/css/[name].css',
+			allChunks: false
+		})
 	]
 }
