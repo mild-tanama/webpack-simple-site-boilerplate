@@ -58,9 +58,6 @@ module.exports = {
 			to: dist,
 			ignore: [ '*.js', '*.scss' ]
 		}]),
-		new ExtractTextPlugin({
-			filename: '/assets/css/[name].css',
-			allChunks: false
-		})
+		new ExtractTextPlugin('/assets/css/main.css')
 	]
 }

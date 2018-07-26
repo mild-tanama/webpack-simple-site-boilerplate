@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --mode development",
-    "build": "rm -rf dist && webpack --mode production"
+    "build": "rm -rf dist && webpack --mode production",
+    "watch": "rm -rf dist && webpack --mode development --watch"
   },
   "keywords": [],
   "author": "",
