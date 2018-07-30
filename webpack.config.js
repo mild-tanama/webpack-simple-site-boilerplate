@@ -46,7 +46,21 @@ module.exports = {
 				exclude: /node_modules/,
 				use: ExtractTextPlugin.extract({
 					fallback: 'style-loader',
-					use: [{loader: 'css-loader', options: {url: false}}, 'sass-loader'],
+					use: [
+						{
+							loader: 'css-loader',
+							options: { url: false }
+						},
+						{
+							loader: 'postcss-loader',
+							options: {
+								plugins: [
+									require('autoprefixer')({ grid: true })
+								]
+							},
+						},
+						'sass-loader'
+					],
 				})
 			},
 		]
