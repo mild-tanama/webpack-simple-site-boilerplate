@@ -2,5 +2,18 @@
 
 ## 概要
 簡易的なサイトを作る際に使える環境を作りました。
-まだ少し微調整中です。(2018/07/26)
 
+## 利用方法
+
+```bash
+# install dependencies
+$ npm i
+
+# serve with hot reload at localhost:3000
+# watch -> scssをhot reloadさせるため
+$ npm run start
+$ npm run watch
+
+# production build
+$ npm run build
+```
