@@ -6,72 +6,90 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const src = path.resolve(__dirname, 'src')
 const dist = path.resolve(__dirname, 'dist')
 
-module.exports = {
-	mode: 'development',
+module.exports = [
+	{
+		mode: 'development',
 
-	entry: [
-		src + '/assets/scripts/main.js',
-		src + '/assets/scss/style.scss'
-	],
+		devServer: {
+			contentBase: dist,
+			port: 3000,
+			open: true
+		},
 
-	output: {
-		filename: 'bundle.js',
-		path: dist
-	},
+		entry: [
+			src + '/assets/scripts/main.js',
+		],
 
-	devServer: {
-		contentBase: dist,
-		port: 3000,
-		open: true
-	},
+		output: {
+			filename: 'bundle.js',
+			path: dist
+		},
 
-	module: {
-		rules: [
-			{
-				test: /\.js$/,
-				exclude: /node_modules/,
-				use: [
-					{
-						loader: 'babel-loader',
-						options: {
-							presets: [
-								['env', {'modules': false}]
-							]
-						}
-					}
-				]
-			},
-			{
-				test: /\.scss$/,
-				exclude: /node_modules/,
-				use: ExtractTextPlugin.extract({
-					fallback: 'style-loader',
+		module: {
+			rules: [
+				{
+					test: /\.js$/,
+					exclude: /node_modules/,
 					use: [
 						{
-							loader: 'css-loader',
-							options: { url: false }
-						},
-						{
-							loader: 'postcss-loader',
+							loader: 'babel-loader',
 							options: {
-								plugins: [
-									require('autoprefixer')({ grid: true })
+								presets: [
+									['env', {'modules': false}]
 								]
-							},
-						},
-						'sass-loader'
-					],
-				})
-			},
-		]
+							}
+						}
+					]
+				}
+			]
+		},
 	},
+	{
+		mode: 'development',
 
-	plugins: [
-		new CopyWebpackPlugin([{
-			from: src,
-			to: dist,
-			ignore: [ '*.js', '*.scss' ]
-		}]),
-		new ExtractTextPlugin('/assets/css/main.css')
-	]
-}
+		entry: [
+			src + '/assets/scss/style.scss'
+		],
+
+		output: {
+			filename: 'style.css',
+			path: dist
+		},
+
+		module: {
+			rules: [
+				{
+					test: /\.scss$/,
+					exclude: /node_modules/,
+					use: ExtractTextPlugin.extract({
+						fallback: 'style-loader',
+						use: [
+							{
+								loader: 'css-loader',
+								options: { url: false }
+							},
+							{
+								loader: 'postcss-loader',
+								options: {
+									plugins: [
+										require('autoprefixer')({ grid: true })
+									]
+								},
+							},
+							'sass-loader'
+						],
+					})
+				}
+			]
+		},
+
+		plugins: [
+			new CopyWebpackPlugin([{
+				from: src,
+				to: dist,
+				ignore: [ '*.js', '*.scss', '.DS_store' ]
+			}]),
+			new ExtractTextPlugin('style.css')
+		]
+	}
+]
